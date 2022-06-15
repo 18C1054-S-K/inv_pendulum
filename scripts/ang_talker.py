@@ -4,7 +4,7 @@ import gpiozero
 import rospy
 from std_msgs.msg import Float32, Bool
 
-ENCODER_VALUE_2_RAD = 3.14159
+ENCODER_VALUE_2_RAD = 3.14159 * 2.0
 FAIL_ANG_RAD = 3.14159 / 3.0
 			
 
@@ -24,7 +24,7 @@ def main():
 		pub_fail = rospy.Publisher('failed', Bool, queue_size=10)
 
 		while not rospy.is_shutdown():
-			ang = encoder.value * ENCODER_VALUE_2_RAD
+			ang = encoder.value * ENCODER_VALUE_2_RAD - 3.14159
 			if check_fail(ang):
 				pub_fail.publish(True)
 				break
