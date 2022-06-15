@@ -31,6 +31,7 @@ def main():
 		while not rospy.is_shutdown():
 			ang = encoder.value * ENCODER_VALUE_2_RAD - 3.14159
 			if check_fail(ang):
+				print('check fail')
 				pub_fail.publish(True)
 #				break
 			else:
