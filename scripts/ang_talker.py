@@ -32,7 +32,7 @@ def main():
 			ang = encoder.value * ENCODER_VALUE_2_RAD - 3.14159
 			if check_fail(ang):
 				pub_fail.publish(True)
-				break
+#				break
 			else:
 				pub_ang.publish(ang)
 			r.sleep()
