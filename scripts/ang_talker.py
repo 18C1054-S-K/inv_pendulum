@@ -2,7 +2,7 @@
 
 import gpiozero
 import rospy
-from std_msgs.msg import Float32
+from std_msgs.msg import Float32, Bool
 
 ENCODER_VALUE_2_RAD = 3.14159
 FAIL_ANG_RAD = 3.14159 / 3.0
