@@ -1,0 +1,14 @@
+<launch>
+	<arg name="eigenval0_arg" default="0.0"/>
+	<arg name="eigenval1_arg" default="0.0"/>
+	<arg name="eigenval2_arg" default="0.0"/>
+
+	<node name="controller" pkg="inv_pendulum" type="controller.py" output="screen">
+		<param name="eigenval0" type="double" value="$(arg eigenval0_arg)"/>
+		<param name="eigenval1" type="double" value="$(arg eigenval1_arg)"/>
+		<param name="eigenval2" type="double" value="$(arg eigenval2_arg)"/>
+	</node>
+
+	<node name="ang_talker" pkg="inv_pendulum" type="controller.py"/>
+	<node name="tire_rotater" pkg="inv_pendulum" type="tire_rotater.py"/>
+</launch>

@@ -1,0 +1,7 @@
+<launch>
+	<arg name="test_arg" default="0.0"/>
+
+	<node name="test" pkg="inv_pendulum" type="test.py" output="screen">
+		<param name="test_param" type="double" value="$(arg test_arg)"/>
+	</node>
+</launch>
