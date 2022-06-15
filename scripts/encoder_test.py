@@ -4,17 +4,13 @@ import rospy
 from std_msgs.msg import Float32
 
 ang=0.0
-test_b = True
 
 def update_ang(msg):
-	if test_b:
-		print('update_ang')
-		test_b=False
+	global ang
 	ang = msg.data
 
 
 def print_ang(event):
-	test_b=True
 	print(ang)
 
 
