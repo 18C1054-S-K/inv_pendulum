@@ -1,0 +1,4 @@
+<launch>
+	<node name="ang_talker" pkg="inv_pendulum" type="ang_talker.py"/>
+	<node name="encoder_test" pkg="inv_pendulum" type="encoder_test.py" output="screen"/>
+</launch>
