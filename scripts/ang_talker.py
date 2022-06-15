@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import spidev
 import gpiozero
 import rospy
 from std_msgs.msg import Float32, Bool
@@ -16,6 +17,9 @@ def check_fail(ang):
 
 
 def main():
+	spi = spidev.SpiDev()
+	spi.open(0,0)
+	spi.max_speed_hz = 10000
 	encoder = gpiozero.MCP3208(channel=0)
 
 	try:
