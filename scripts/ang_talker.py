@@ -26,6 +26,7 @@ def main():
 		rospy.init_node('ang_talker', anonymous=True)
 		pub_ang = rospy.Publisher('ang', Float32, queue_size=10)
 		pub_fail = rospy.Publisher('failed', Bool, queue_size=10)
+		r = rospy.Rate(200)
 
 		while not rospy.is_shutdown():
 			ang = encoder.value * ENCODER_VALUE_2_RAD - 3.14159
@@ -34,6 +35,7 @@ def main():
 				break
 			else:
 				pub_ang.publish(ang)
+			r.sleep()
 
 	except rospy.ROSInterruptException: pass
 
