@@ -2,6 +2,7 @@
 
 import rospy
 import gpiozero
+import time
 
 #rad
 class MyMotor():
@@ -76,7 +77,33 @@ def main():
 	try:
 		rospy.init_node('motor_test', anonymous=True)
 		mymotor = MyMotor(23, 24, 5, 6)
-		rospy.spin()
+
+		print('f slow')
+		mymotor.rotate(3.14159)
+		time.sleep(1.0)
+		print('f fast')
+		mymotor.rotate(3.14159 * 2.0)
+		time.sleep(1.0)
+		print('f slow')
+		mymotor.rotate(3.14159)
+		time.sleep(1.0)
+		print('stop')
+		mymotor.rotate(0.0)
+		time.sleep(1.0)
+		print('b slow')
+		mymotor.rotate(-3.14159)
+		time.sleep(1.0)
+		print('b fast')
+		mymotor.rotate(-3.14159 * 2.0)
+		time.sleep(1.0)
+		print('b slow')
+		mymotor.rotate(-3.14159)
+		time.sleep(1.0)
+		print('stop')
+		mymotor.rotate(0.0)
+		time.sleep(1.0)
+		print('finish')
+		
 	except rospy.ROSInterruptException: pass
 
 
