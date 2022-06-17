@@ -4,7 +4,7 @@ import rospy
 import gpiozero
 import time
 
-#rad
+#rad sec
 class MyMotor():
 	DELTA_T = 0.002
 	target_angv = 0.0
@@ -22,6 +22,8 @@ class MyMotor():
 	l = 5 #length of latest_angs
 	latest_angs = [0.0] * 5 #0:newest ang , 1:1 loop old ...
 	s = 1.0
+	
+	o = 0.0
 
 	def __init__(self, forward_gpiono, backward_gpiono, encoder_a_gpiono, encoder_b_gpiono):
 		self.motor = gpiozero.Motor(forward_gpiono, backward_gpiono)
@@ -55,7 +57,7 @@ class MyMotor():
 		self.err_angv_i += (self.err_angv + e_av_b) * self.DELTA_T / 2.0
 
 		#output
-		o = self.err_angv * self.k_p + self.err_angv_d * self.k_d + self.err_angv_i * self.k_i
+		self.o += self.err_angv * self.k_p + self.err_angv_d * self.k_d + self.err_angv_i * self.k_i
 		if o > 1.0:
 			self.motor.forward(1.0)
 		elif o >= 0.0:
