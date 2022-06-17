@@ -57,7 +57,7 @@ class MyMotor():
 		self.err_angv_i += (self.err_angv + e_av_b) * self.DELTA_T / 2.0
 
 		#output
-		self.o += self.err_angv * self.k_p + self.err_angv_d * self.k_d + self.err_angv_i * self.k_i
+		self.o += (self.err_angv * self.k_p + self.err_angv_d * self.k_d + self.err_angv_i * self.k_i)*self.DELTA_T
 		if self.o > 1.0:
 			self.motor.forward(1.0)
 		elif self.o >= 0.0:
