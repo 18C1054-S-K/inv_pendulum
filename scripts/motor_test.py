@@ -38,7 +38,7 @@ class MyMotor():
 		#calc angv
 		for i in range(1, self.l):
 			self.latest_angs[self.l - i] = self.latest_angs[self.l - i - 1]
-		self.latest_angs[0] = self.encoder.steps * self.STEP_2_RAD
+		self.latest_angs[0] = float(self.encoder.steps) * self.STEP_2_RAD
 
 		self.angv = 0.0
 		p = 1.0
@@ -67,7 +67,7 @@ class MyMotor():
 
 
 	def rotate(self, rad_per_sec):
-		self.target_rps = rad_per_sec
+		self.target_angv = rad_per_sec
 		self.err_angv = 0.0
 		self.err_ang = 0.0
 
