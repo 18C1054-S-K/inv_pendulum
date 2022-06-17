@@ -38,7 +38,7 @@ class MyMotor():
 	def timer_func(self, event):
 		#calc angv
 		for i in range(1, self.l):
-			latest_angs[self.l - i] = self.latest_angs[self.l - i - 1]
+			self.latest_angs[self.l - i] = self.latest_angs[self.l - i - 1]
 		self.latest_angs[0] = self.encoder.steps * self.STEP_2_RAD
 
 		self.angv = 0.0
