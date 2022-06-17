@@ -58,14 +58,14 @@ class MyMotor():
 
 		#output
 		self.o += self.err_angv * self.k_p + self.err_angv_d * self.k_d + self.err_angv_i * self.k_i
-		if o > 1.0:
+		if self.o > 1.0:
 			self.motor.forward(1.0)
-		elif o >= 0.0:
-			self.motor.forward(o)
-		elif o < -1.0:
+		elif self.o >= 0.0:
+			self.motor.forward(self.o)
+		elif self.o < -1.0:
 			self.motor.backward(1.0)
 		else:
-			self.motor.backward(-o)
+			self.motor.backward(-self.o)
 
 
 	def rotate(self, rad_per_sec):
