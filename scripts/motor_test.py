@@ -7,7 +7,7 @@ import gpiozero
 class MyMotor():
 	DELTA_T = 0.002
 	target_angv = 0.0
-	STEP_2_RAD = 3.14159 / 100.0
+	STEP_2_RAD = 3.14159 / 40.0
 	angv = 0.0
 	
 	err_angv = 0.0
@@ -18,18 +18,18 @@ class MyMotor():
 	k_d = 1.0
 	k_i = 1.0
 
-	l = 4 #length of latest_angs
+	l = 5 #length of latest_angs
 	latest_angs = [0.0] #0:newest ang , 1:1 loop old ...
 	s = 1.0
 
 	def __init__(self, forward_gpiono, backward_gpiono, encoder_a_gpiono, encoder_b_gpiono):
 		self.motor = gpiozero.Motor(forward_gpiono, backward_gpiono)
-		self.encoder = gpiozero.RotaryEncoder(a=encoder_a_gpiono, b=encoder_b_gpiono, max_steps=100)
+		self.encoder = gpiozero.RotaryEncoder(a=encoder_a_gpiono, b=encoder_b_gpiono, max_steps=400)
 		self.timer = rospy.Timer(rospy.Duration(self.DELTA_T), self.timer_func)
 
-		self.k_p = rospy.get_param('/inv__pendulum/k_p')
-		self.k_i = rospy.get_param('/inv__pendulum/k_i')
-		self.k_d = rospy.get_param('/inv__pendulum/k_d')
+		self.k_p = rospy.get_param('/motor_test/k_p')
+		self.k_i = rospy.get_param('/motor_test/k_i')
+		self.k_d = rospy.get_param('/motor_test/k_d')
 		self.latest_angs = [0.0] * self.l
 		self.s = 1.0 - (0.5 ** self.l)
 
