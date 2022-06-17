@@ -20,7 +20,7 @@ class MyMotor():
 	k_i = 1.0
 
 	l = 5 #length of latest_angs
-	latest_angs = [0.0] #0:newest ang , 1:1 loop old ...
+	latest_angs = [0.0] * 5 #0:newest ang , 1:1 loop old ...
 	s = 1.0
 
 	def __init__(self, forward_gpiono, backward_gpiono, encoder_a_gpiono, encoder_b_gpiono):
@@ -31,7 +31,6 @@ class MyMotor():
 		self.k_p = rospy.get_param('/motor_test/k_p')
 		self.k_i = rospy.get_param('/motor_test/k_i')
 		self.k_d = rospy.get_param('/motor_test/k_d')
-		self.latest_angs = [0.0] * self.l
 		self.s = 1.0 - (0.5 ** self.l)
 
 
