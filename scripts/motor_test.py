@@ -35,7 +35,7 @@ class MyMotor():
 
 
 	def timer_func(self, event):
-		if time.now() - self.time_stamp > 0.05:
+		if time.time() - self.time_stamp > 0.05:
 			#calc angular velocity
 			for i in range(1, self.l):
 				self.latest_delta_angs[self.l - i] = self.latest_delta_angs[self.l - i - 1]
@@ -73,7 +73,7 @@ class MyMotor():
 
 
 	def update_target(self, msg):
-		self.time_stamp = time.now()
+		self.time_stamp = time.time()
 
 		self.target_angv = msg.data
 		self.o = (- self.target_angv * self.a_angv) / self.a_volt
