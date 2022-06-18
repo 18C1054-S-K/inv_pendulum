@@ -27,7 +27,7 @@ class MyMotor():
 		self.encoder = gpiozero.RotaryEncoder(a=encoder_a_gpiono, b=encoder_b_gpiono, max_steps=40, wrap=True)
 		self.timer = rospy.Timer(rospy.Duration(self.DELTA_T), self.timer_func)
 #		self.sub = rospy.Subscriber('pos_v', Float32, self.update_taget)
-		self.sub = rospy.Subscriber('tire_angv', Float32, self.update_taget)
+		self.sub = rospy.Subscriber('tire_angv', Float32, self.update_target)
 
 		self.s = 1.0 - (0.5 ** self.l)
 
