@@ -20,6 +20,8 @@ class MyMotor():
 	s = 1.0
 	
 	o = 0.0
+	
+	angular_velocity = 0.0
 
 	def __init__(self, forward_gpiono, backward_gpiono, encoder_a_gpiono, encoder_b_gpiono):
 		self.motor = gpiozero.Motor(forward_gpiono, backward_gpiono)
@@ -46,21 +48,23 @@ class MyMotor():
 			angv += p * d / (float(i) * self.DELTA_T)
 		angv /= self.s
 		
+		self.angular_velocity = angv
+		
 		#estimate torque
-		tau = (- self.o * self.a_volt - angv * self.a_angv) / self.a_torque
+#		tau = (- self.o * self.a_volt - angv * self.a_angv) / self.a_torque
 
 		#fix output value
-		self.o = (-tau * self.a_torque - self.target_angv * self.a_angv) / self.a_volt
+#		self.o = (-tau * self.a_torque - self.target_angv * self.a_angv) / self.a_volt
 
 		#output
-		if self.o >= 1.0:
-			self.motor.forward(1.0)
-		elif self.o >= 0.0:
-			self.motor.forward(self.o)
-		elif self.o <= -1.0:
-			self.motor.backward(1.0)
-		else:
-			self.motor.backward(-self.o)
+#		if self.o >= 1.0:
+#			self.motor.forward(1.0)
+#		elif self.o >= 0.0:
+#			self.motor.forward(self.o)
+#		elif self.o <= -1.0:
+#			self.motor.backward(1.0)
+#		else:
+#			self.motor.backward(-self.o)
 
 
 	def rotate(self, rad_per_sec):
@@ -72,31 +76,9 @@ def main():
 		rospy.init_node('motor_test', anonymous=True)
 		mymotor = MyMotor(23, 24, 5, 6)
 
-		print('f slow')
-		mymotor.rotate(3.14159)
-		time.sleep(1.0)
-		print('f fast')
-		mymotor.rotate(3.14159 * 2.0)
-		time.sleep(1.0)
-		print('f slow')
-		mymotor.rotate(3.14159)
-		time.sleep(1.0)
-		print('stop')
-		mymotor.rotate(0.0)
-		time.sleep(1.0)
-		print('b slow')
-		mymotor.rotate(-3.14159)
-		time.sleep(1.0)
-		print('b fast')
-		mymotor.rotate(-3.14159 * 2.0)
-		time.sleep(1.0)
-		print('b slow')
-		mymotor.rotate(-3.14159)
-		time.sleep(1.0)
-		print('stop')
-		mymotor.rotate(0.0)
-		time.sleep(1.0)
-		print('finish')
+		while True:
+			print(mymotor.angular_velocity)
+			time.sleep(1.2)
 		
 	except rospy.ROSInterruptException: pass
 

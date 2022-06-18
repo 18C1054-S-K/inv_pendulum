@@ -1,11 +1,3 @@
 <launch>
-	<arg name="k_p_arg" default="-1.0"/>
-	<arg name="k_i_arg" default="0.0"/>
-	<arg name="k_d_arg" default="0.0"/>
-
-	<node name="motor_test" pkg="inv_pendulum" type="motor_test.py" output="screen">
-		<param name="k_p" type="double" value="$(arg k_p_arg)"/>
-		<param name="k_i" type="double" value="$(arg k_i_arg)"/>
-		<param name="k_d" type="double" value="$(arg k_d_arg)"/>
-	</node>
+	<node name="motor_encoder_test" pkg="inv_pendulum" type="motor_encoder_test.py" output="screen"/>
 </launch>
