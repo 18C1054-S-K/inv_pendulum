@@ -35,7 +35,10 @@ class MyMotor():
 			self.latest_delta_angs[self.l - i] = self.latest_delta_angs[self.l - i - 1]
 		step_before = self.latest_step
 		self.latest_step = self.encoder.steps
-		self.latest_delta_angs[0] = float(((self.latest_step - step_before + 81) % 81) - 40) * self.STEP_2_RAD
+		delta_step = (self.latest_step - step_before + 81) % 81
+		if delta_step > 41:
+			delta_step -= 81
+		self.latest_delta_angs[0] = float(delta_step) * self.STEP_2_RAD
 
 		angv = 0.0
 		p = 1.0

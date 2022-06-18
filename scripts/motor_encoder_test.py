@@ -76,7 +76,7 @@ def main():
 		rospy.init_node('motor_test', anonymous=True)
 		mymotor = MyMotor(23, 24, 5, 6)
 
-		while True:
+		while not rospy.is_shutdown():
 			print(mymotor.angular_velocity)
 			time.sleep(1.2)
 		
