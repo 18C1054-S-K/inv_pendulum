@@ -6,7 +6,7 @@ import time
 
 #rad sec m kg V
 class MyMotor():
-	DELTA_T = 0.002
+	DELTA_T = 0.01
 	target_angv = 0.0
 	STEP_2_RAD = 3.14159 / 40.0
 	
@@ -14,8 +14,8 @@ class MyMotor():
 	a_torque = -400.0
 	a_angv = -2.0 / (125.0 * 3.14159)
 	
-	l = 5 #length of latest_angs
-	latest_delta_angs = [0.0] * 5 #0:newest ang , 1:1 loop old ...
+	l = 4 #length of latest_angs
+	latest_delta_angs = [0.0] * 4 #0:newest ang , 1:1 loop old ...
 	latest_step = 0
 	s = 1.0
 	
@@ -36,17 +36,17 @@ class MyMotor():
 		step_before = self.latest_step
 		self.latest_step = self.encoder.steps
 		delta_step = (self.latest_step - step_before + 81) % 81
-		if delta_step > 41:
+		if delta_step >= 41:
 			delta_step -= 81
 		self.latest_delta_angs[0] = float(delta_step) * self.STEP_2_RAD
 
 		angv = 0.0
 		p = 1.0
 		d = 0.0
-		for i in range(1, self.l):
+		for i in range(self.l):
 			p *= 0.5
 			d += self.latest_delta_angs[i]
-			angv += p * d / (float(i) * self.DELTA_T)
+			angv += p * d / (float(i + 1) * self.DELTA_T)
 		angv /= self.s
 		
 		#estimate torque
