@@ -82,7 +82,7 @@ class MyMotor():
 	def update_target(self, msg):
 		print('    before target:', self.target_angv)
 		print('    now angv     :', self.angular_velocity)
-		print('    difference   :', self.target_angv - self.angular_velocityv)
+		print('    difference   :', self.target_angv - self.angular_velocity)
 		self.target_angv = msg.data
 		self.o = - self.target_angv * self.a_angv / self.a_volt
 		if self.target_angv > 0.01:
