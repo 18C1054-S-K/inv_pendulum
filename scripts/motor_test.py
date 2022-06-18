@@ -35,55 +35,54 @@ class MyMotor():
 
 
 	def timer_func(self, event):
-		if time.time() - self.time_stamp > 0.05:
-			#calc angular velocity
-			for i in range(1, self.l):
-				self.latest_delta_angs[self.l - i] = self.latest_delta_angs[self.l - i - 1]
-			step_before = self.latest_step
-			self.latest_step = self.encoder.steps
-			delta_step = (self.latest_step - step_before + 81) % 81
-			if delta_step >= 41:
-				delta_step -= 81
-			self.latest_delta_angs[0] = float(delta_step) * self.STEP_2_RAD
+		#calc angular velocity
+		for i in range(1, self.l):
+			self.latest_delta_angs[self.l - i] = self.latest_delta_angs[self.l - i - 1]
+		step_before = self.latest_step
+		self.latest_step = self.encoder.steps
+		delta_step = (self.latest_step - step_before + 81) % 81
+		if delta_step >= 41:
+			delta_step -= 81
+		self.latest_delta_angs[0] = float(delta_step) * self.STEP_2_RAD
 
-			angv = 0.0
-			p = 1.0
-			d = 0.0
-			for i in range(self.l):
-				p *= 0.5
-				d += self.latest_delta_angs[i]
-				angv += p * d / (float(i + 1) * self.DELTA_T)
-			angv /= self.s
+		angv = 0.0
+		p = 1.0
+		d = 0.0
+		for i in range(self.l):
+			p *= 0.5
+			d += self.latest_delta_angs[i]
+			angv += p * d / (float(i + 1) * self.DELTA_T)
+		angv /= self.s
 		
-			#estimate torque
-			tau = (- self.o * self.a_volt - angv * self.a_angv) / self.a_torque
+		#estimate torque
+		tau = (- self.o * self.a_volt - angv * self.a_angv) / self.a_torque
 
-			#fix output value
-			self.o = (-tau * self.a_torque - self.target_angv * self.a_angv) / self.a_volt
+		#fix output value
+		self.o = (-tau * self.a_torque - self.target_angv * self.a_angv) / self.a_volt
 
-			#output
-			if self.o >= 1.0:
-				self.o = 1.0
-				self.motor.forward(1.0)
-			elif self.o >= 0.0:
-				self.motor.forward(self.o)
-			elif self.o <= -1.0:
-				self.o = -1.0
-				self.motor.backward(1.0)
-			else:
-				self.motor.backward(-self.o)
-
-
-	def update_target(self, msg):
-		self.time_stamp = time.time()
-
-		self.target_angv = msg.data
-		self.o = (- self.target_angv * self.a_angv) / self.a_volt
+		#output
 		if self.o >= 1.0:
+			self.o = 1.0
 			self.motor.forward(1.0)
 		elif self.o >= 0.0:
 			self.motor.forward(self.o)
 		elif self.o <= -1.0:
+			self.o = -1.0
+			self.motor.backward(1.0)
+		else:
+			self.motor.backward(-self.o)
+
+
+	def update_target(self, msg):
+		self.target_angv = msg.data
+		self.o = (- self.target_angv * self.a_angv) / self.a_volt
+		if self.o >= 1.0:
+			self.o = 1.0
+			self.motor.forward(1.0)
+		elif self.o >= 0.0:
+			self.motor.forward(self.o)
+		elif self.o <= -1.0:
+			self.o = -1.0
 			self.motor.backward(1.0)
 		else:
 			self.motor.backward(-self.o)
