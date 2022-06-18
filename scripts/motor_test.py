@@ -22,9 +22,11 @@ class MyMotor():
 	o = 0.0
 
 	def __init__(self, forward_gpiono, backward_gpiono, encoder_a_gpiono, encoder_b_gpiono):
-		self.motor = gpiozero.Motor(forward_gpiono, backward_gpiono)
+		self.motor = gpiozero.Motor(forward=forward_gpiono, backward=backward_gpiono)
 		self.encoder = gpiozero.RotaryEncoder(a=encoder_a_gpiono, b=encoder_b_gpiono, max_steps=40, wrap=True)
 		self.timer = rospy.Timer(rospy.Duration(self.DELTA_T), self.timer_func)
+#		self.sub = rospy.Subscribe('pos_v', Float32, self.update_taget)
+		self.sub = rospy.Subscribe('tire_angv', Float32, self.update_taget)
 
 		self.s = 1.0 - (0.5 ** self.l)
 
@@ -66,14 +68,18 @@ class MyMotor():
 			self.motor.backward(-self.o)
 
 
-	def rotate(self, rad_per_sec):
+	def update_target(self, msg):
 		self.target_angv = rad_per_sec
 
 
 def main():
 	try:
 		rospy.init_node('motor_test', anonymous=True)
-		mymotor = MyMotor(23, 24, 5, 6)
+		f = rospy.get_param('forward_gpio')
+		b = rospy.get_param('backward_gpio')
+		A = rospy.get_param('encoder_a_gpio')
+		B = rospy.get_param('encoder_b_gpio')
+		mymotor = MyMotor(f, b, A, B)
 
 		print('f slow')
 		mymotor.rotate(3.14159)
