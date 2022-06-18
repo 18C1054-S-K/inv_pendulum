@@ -7,7 +7,7 @@ from std_msgs.msg import Float32
 
 #rad sec m kg V
 class MyMotor():
-	DELTA_T = 0.01
+	DELTA_T = 0.05
 	target_angv = 0.0
 	STEP_2_RAD = 3.14159 / 40.0
 	
@@ -63,10 +63,12 @@ class MyMotor():
 
 			#output
 			if self.o >= 1.0:
+				self.o = 1.0
 				self.motor.forward(1.0)
 			elif self.o >= 0.0:
 				self.motor.forward(self.o)
 			elif self.o <= -1.0:
+				self.o = -1.0
 				self.motor.backward(1.0)
 			else:
 				self.motor.backward(-self.o)
