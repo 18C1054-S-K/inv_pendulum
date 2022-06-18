@@ -3,6 +3,7 @@
 import rospy
 import gpiozero
 import time
+from std_msgs.msg import Float32
 
 #rad sec m kg V
 class MyMotor():
@@ -75,10 +76,10 @@ class MyMotor():
 def main():
 	try:
 		rospy.init_node('motor_test', anonymous=True)
-		f = rospy.get_param('forward_gpio')
-		b = rospy.get_param('backward_gpio')
-		A = rospy.get_param('encoder_a_gpio')
-		B = rospy.get_param('encoder_b_gpio')
+		f = rospy.get_param('/motor_test/forward_gpio')
+		b = rospy.get_param('/motor_test/backward_gpio')
+		A = rospy.get_param('/motor_test/encoder_a_gpio')
+		B = rospy.get_param('/motor_test/encoder_b_gpio')
 		mymotor = MyMotor(f, b, A, B)
 
 		print('f slow')

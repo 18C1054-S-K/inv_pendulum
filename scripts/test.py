@@ -2,6 +2,7 @@
 
 import time
 import rospy
+from std_msgs.msg import Float32
 
 if __name__ == "__main__":
 	rospy.init_node('test', anonymous=True)
