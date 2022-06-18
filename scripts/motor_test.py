@@ -21,6 +21,8 @@ class MyMotor():
 	latest_step = 0
 	s = 1.0
 	
+	angular_velocity = 0.0 #debug
+	
 	o = 0.0
 
 	def __init__(self, forward_gpiono, backward_gpiono, encoder_a_gpiono, encoder_b_gpiono):
@@ -56,6 +58,8 @@ class MyMotor():
 			angv += p * d / (float(i + 1) * self.DELTA_T_SAMPLING)
 		angv /= self.s
 		
+		self.angular_velocity = angv
+		
 		#estimate torque
 		tau = (- self.o * self.a_volt - angv * self.a_angv) / self.a_torque
 
@@ -76,11 +80,14 @@ class MyMotor():
 
 
 	def update_target(self, msg):
+		print('    before target:', self.target_angv)
+		print('    now angv     :', self.angular_velocity)
+		print('    difference   :', self.target_angv - self.angular_velocityv)
 		self.target_angv = msg.data
 		self.o = - self.target_angv * self.a_angv / self.a_volt
-		if self.target_angv > 0.0:
+		if self.target_angv > 0.01:
 			self.o -= 0.0078 * self.a_torque / self.a_volt
-		elif self.target_angv < 0.0:
+		elif self.target_angv < -0.01:
 			self.o += 0.0078 * self.a_torque / self.a_volt
 
 		if self.o >= 1.0:
