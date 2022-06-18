@@ -70,7 +70,7 @@ class MyMotor():
 
 
 	def update_target(self, msg):
-		self.target_angv = rad_per_sec
+		self.target_angv = msg.data
 
 
 def main():
