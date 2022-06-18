@@ -71,6 +71,15 @@ class MyMotor():
 
 	def update_target(self, msg):
 		self.target_angv = msg.data
+		self.o = (- self.target_angv * self.a_angv) / self.a_volt
+		if self.o >= 1.0:
+			self.motor.forward(1.0)
+		elif self.o >= 0.0:
+			self.motor.forward(self.o)
+		elif self.o <= -1.0:
+			self.motor.backward(1.0)
+		else:
+			self.motor.backward(-self.o)
 
 
 def main():
