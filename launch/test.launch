@@ -4,7 +4,7 @@
 	<arg name="encoder_a_gpio" default="5"/>
 	<arg name="encoder_b_gpio" default="6"/>
 	
-	<node name="test" pkg="inv_pendulum" type="test.py"/>
+	<node name="test" pkg="inv_pendulum" type="test.py" output="screen"/>
 
 	<node name="motor_test" pkg="inv_pendulum" type="motor_test.py" output="screen">
 		<param name="forward_gpio" type="int" value="$(arg forward_gpio)"/>
