@@ -7,7 +7,8 @@ from std_msgs.msg import Float32
 
 #rad sec m kg V
 class MyMotor():
-	DELTA_T = 0.05
+	DELTA_T_CONTROLL = 0.05
+	DELTA_T_SAMPLING = 0.01
 	target_angv = 0.0
 	STEP_2_RAD = 3.14159 / 40.0
 	
@@ -22,20 +23,18 @@ class MyMotor():
 	
 	o = 0.0
 
-	time_stamp = 0.0
-
 	def __init__(self, forward_gpiono, backward_gpiono, encoder_a_gpiono, encoder_b_gpiono):
 		self.motor = gpiozero.Motor(forward=forward_gpiono, backward=backward_gpiono)
 		self.encoder = gpiozero.RotaryEncoder(a=encoder_a_gpiono, b=encoder_b_gpiono, max_steps=40, wrap=True)
-		self.timer = rospy.Timer(rospy.Duration(self.DELTA_T), self.timer_func)
+		self.timer = rospy.Timer(rospy.Duration(self.DELTA_T_CONTROLL), self.speed_controll)
+		self.timer = rospy.Timer(rospy.Duration(self.DELTA_T_SAMPLING), self.sampling)
 #		self.sub = rospy.Subscriber('pos_v', Float32, self.update_taget)
 		self.sub = rospy.Subscriber('tire_angv', Float32, self.update_target)
 
 		self.s = 1.0 - (0.5 ** self.l)
 
 
-	def timer_func(self, event):
-		#calc angular velocity
+	def sampling(self, event):
 		for i in range(1, self.l):
 			self.latest_delta_angs[self.l - i] = self.latest_delta_angs[self.l - i - 1]
 		step_before = self.latest_step
@@ -44,14 +43,17 @@ class MyMotor():
 		if delta_step >= 41:
 			delta_step -= 81
 		self.latest_delta_angs[0] = float(delta_step) * self.STEP_2_RAD
+		
 
+	def speed_controll(self, event):
+		#calc angular velocity
 		angv = 0.0
 		p = 1.0
 		d = 0.0
 		for i in range(self.l):
 			p *= 0.5
 			d += self.latest_delta_angs[i]
-			angv += p * d / (float(i + 1) * self.DELTA_T)
+			angv += p * d / (float(i + 1) * self.DELTA_T_SAMPLING)
 		angv /= self.s
 		
 		#estimate torque
@@ -75,7 +77,12 @@ class MyMotor():
 
 	def update_target(self, msg):
 		self.target_angv = msg.data
-		self.o = (- self.target_angv * self.a_angv) / self.a_volt
+		self.o = - self.target_angv * self.a_angv / self.a_volt
+		if self.target_angv > 0.0:
+			self.o -= 0.0078 * self.a_torque / self.a_volt
+		elif self.target_angv < 0.0:
+			self.o += 0.0078 * self.a_torque / self.a_volt
+
 		if self.o >= 1.0:
 			self.o = 1.0
 			self.motor.forward(1.0)
