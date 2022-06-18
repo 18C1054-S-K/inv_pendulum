@@ -14,7 +14,7 @@ class MyMotor():
 	
 	a_volt = 9.0
 	a_torque = -400.0
-	a_angv = -2.0 / (125.0 * 3.14159)
+	a_angv = -3.0 / (125.0 * 3.14159)
 	
 	l = 4 #length of latest_angs
 	latest_delta_angs = [0.0] * 4 #0:newest ang , 1:1 loop old ...
