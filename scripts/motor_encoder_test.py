@@ -6,7 +6,7 @@ import time
 
 #rad sec m kg V
 class MyMotor():
-	DELTA_T = 0.002
+	DELTA_T = 0.01
 	target_angv = 0.0
 	STEP_2_RAD = 3.14159 / 40.0
 	
@@ -38,7 +38,7 @@ class MyMotor():
 		step_before = self.latest_step
 		self.latest_step = self.encoder.steps
 		delta_step = (self.latest_step - step_before + 81) % 81
-		if delta_step > 41:
+		if delta_step >= 41:
 			delta_step -= 81
 		self.latest_delta_angs[0] = float(delta_step) * self.STEP_2_RAD
 
