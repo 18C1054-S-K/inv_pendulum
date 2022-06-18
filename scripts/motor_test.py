@@ -4,60 +4,55 @@ import rospy
 import gpiozero
 import time
 
-#rad sec
+#rad sec m kg V
 class MyMotor():
 	DELTA_T = 0.002
 	target_angv = 0.0
 	STEP_2_RAD = 3.14159 / 40.0
-	angv = 0.0
 	
-	err_angv = 0.0
-	err_angv_d = 0.0
-	err_angv_i = 0.0
-
-	k_p = 1.0
-	k_d = 1.0
-	k_i = 1.0
-
+	a_volt = 9.0
+	a_torque = -400.0
+	a_angv = -2.0 / (125.0 * 3.14159)
+	
 	l = 5 #length of latest_angs
-	latest_angs = [0.0] * 5 #0:newest ang , 1:1 loop old ...
+	latest_delta_angs = [0.0] * 5 #0:newest ang , 1:1 loop old ...
+	latest_step = 0
 	s = 1.0
 	
 	o = 0.0
 
 	def __init__(self, forward_gpiono, backward_gpiono, encoder_a_gpiono, encoder_b_gpiono):
 		self.motor = gpiozero.Motor(forward_gpiono, backward_gpiono)
-		self.encoder = gpiozero.RotaryEncoder(a=encoder_a_gpiono, b=encoder_b_gpiono, max_steps=400)
+		self.encoder = gpiozero.RotaryEncoder(a=encoder_a_gpiono, b=encoder_b_gpiono, max_steps=40, wrap=True)
 		self.timer = rospy.Timer(rospy.Duration(self.DELTA_T), self.timer_func)
 
-		self.k_p = rospy.get_param('/motor_test/k_p')
-		self.k_i = rospy.get_param('/motor_test/k_i')
-		self.k_d = rospy.get_param('/motor_test/k_d')
 		self.s = 1.0 - (0.5 ** self.l)
 
 
 	def timer_func(self, event):
-		#calc angv
+		#calc angular velocity
 		for i in range(1, self.l):
-			self.latest_angs[self.l - i] = self.latest_angs[self.l - i - 1]
-		self.latest_angs[0] = float(self.encoder.steps) * self.STEP_2_RAD
+			self.latest_delta_angs[self.l - i] = self.latest_delta_angs[self.l - i - 1]
+		step_before = self.latest_step
+		self.latest_step = self.encoder.steps
+		self.latest_delta_angs[0] = float(((self.latest_step - step_before + 81) % 81) - 40) * self.STEP_2_RAD
 
-		self.angv = 0.0
+		angv = 0.0
 		p = 1.0
+		d = 0.0
 		for i in range(1, self.l):
 			p *= 0.5
-			self.angv += p * (self.latest_angs[0] - self.latest_angs[i]) / (float(i) * self.DELTA_T)
-		self.angv /= self.s
+			d += self.latest_delta_angs[i]
+			angv += p * d / (float(i) * self.DELTA_T)
+		angv /= self.s
 		
-		#calc error and its d&i
-		e_av_b = self.err_angv
-		self.err_angv = self.target_angv - self.angv
-		
-		self.err_angv_d = (self.err_angv - e_av_b) / self.DELTA_T
-		self.err_angv_i += (self.err_angv + e_av_b) * self.DELTA_T / 2.0
+		#estimate torque
+		tau = (- self.o * self.a_volt - angv * self.a_angv) / self.a_torque
+
+		#fix output value
+		self.o = (-tau * self.a_torque - self.target_angv * self.a_angv) / self.a_volt
 
 		#output
-		self.o += (self.err_angv * self.k_p + self.err_angv_d * self.k_d + self.err_angv_i * self.k_i)*self.DELTA_T
 		if self.o > 1.0:
 			self.motor.forward(1.0)
 		elif self.o >= 0.0:
@@ -70,8 +65,6 @@ class MyMotor():
 
 	def rotate(self, rad_per_sec):
 		self.target_angv = rad_per_sec
-		self.err_angv = 0.0
-		self.err_ang = 0.0
 
 
 def main():
