@@ -8,8 +8,8 @@
 
 	<node name="motor_test" pkg="inv_pendulum" type="motor_test.py" output="screen">
 		<param name="forward_gpio" type="int" value="$(arg forward_gpio)"/>
-		<param name="forward_gpio" type="int" value="$(arg backward_gpio)"/>
-		<param name="encoder_b_gpio" type="int" value="$(arg encoder_a_gpio)"/>
+		<param name="backward_gpio" type="int" value="$(arg backward_gpio)"/>
+		<param name="encoder_a_gpio" type="int" value="$(arg encoder_a_gpio)"/>
 		<param name="encoder_b_gpio" type="int" value="$(arg encoder_b_gpio)"/>
 	</node>
 </launch>
