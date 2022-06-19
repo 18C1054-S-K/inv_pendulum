@@ -13,8 +13,7 @@ class MyMotor():
 	STEP_2_RAD = 3.14159 / 40.0
 	
 	a_volt = 9.0
-	a_torque = -400.0
-	a_angv = -1.0 / (125.0 * 3.14159)
+	a_angv = 0.02 #?
 	
 	l = 4 #length of latest_angs
 	latest_delta_angs = [0.0] * 4 #0:newest ang , 1:1 loop old ...
@@ -60,11 +59,11 @@ class MyMotor():
 		
 		self.angular_velocity = angv
 		
-		#estimate torque
-		tau = (- self.o * self.a_volt - angv * self.a_angv) / self.a_torque
+		#estimate torque ?
+		tau = - self.o * self.a_volt - angv * self.a_angv
 
 		#fix output value
-		self.o = (-tau * self.a_torque - self.target_angv * self.a_angv) / self.a_volt
+		self.o = (-tau - self.target_angv * self.a_angv) / self.a_volt
 
 		#output
 		if self.o >= 1.0:
