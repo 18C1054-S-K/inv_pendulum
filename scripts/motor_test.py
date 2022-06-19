@@ -13,7 +13,7 @@ class MyMotor():
 	STEP_2_RAD = 3.14159 / 40.0
 	
 	a_volt = 9.0
-	a_angv = 0.02 #?
+	a_angv = -0.02 #?
 	
 	l = 4 #length of latest_angs
 	latest_delta_angs = [0.0] * 4 #0:newest ang , 1:1 loop old ...
