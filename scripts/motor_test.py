@@ -79,7 +79,7 @@ class MyMotor():
 
 		#fix output value
 		o_feedback = (-tau - self.target_angv * self.a_angv) / self.a_volt
-		o_pid = self.k_p * self.angv_err_p + self.k_i * self.angv_err_i + self.k_d * self.angv_err_d
+		o_pid = self.o + self.k_p * self.angv_err_p + self.k_i * self.angv_err_i + self.k_d * self.angv_err_d
 		self.o = (o_feedback + o_pid) / 2.0
 
 		#output
@@ -101,6 +101,7 @@ class MyMotor():
 		print('    difference   :', self.target_angv - self.angular_velocity)
 		self.target_angv = msg.data
 		self.o = - self.target_angv * self.a_angv / self.a_volt
+		self.angv_err_i = 0.0
 
 		if self.o >= 1.0:
 			self.o = 1.0
