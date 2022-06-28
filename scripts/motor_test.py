@@ -10,6 +10,7 @@ class MyMotor():
 	DELTA_T_CONTROLL = 0.05
 	DELTA_T_SAMPLING = 0.01
 	target_angv = 0.0
+	angv = 0.0
 	STEP_2_RAD = 3.14159 / 40.0
 	
 	a_volt = 9.0
@@ -54,18 +55,18 @@ class MyMotor():
 		self.latest_delta_angs[0] = float(delta_step) * self.STEP_2_RAD
 
 		#calc angular velocity
-		angv = 0.0
+		self.angv = 0.0
 		p = 1.0
 		d = 0.0
 		for i in range(self.l):
 			p *= 0.5
 			d += self.latest_delta_angs[i]
-			angv += p * d / (float(i + 1) * self.DELTA_T_SAMPLING)
-		angv /= self.s
+			self.angv += p * d / (float(i + 1) * self.DELTA_T_SAMPLING)
+		self.angv /= self.s
 
 		#calc err
 		angv_err_p_before = self.angv_err_p
-		self.angv_err_p = angv - self.target_angv
+		self.angv_err_p = self.angv - self.target_angv
 		self.angv_err_d = (self.angv_err_p - angv_err_p_before) / self.DELTA_T_SAMPLING
 		self.angv_err_i += (self.angv_err_p + angv_err_p_before) * self.DELTA_T_SAMPLING / 2.0
 		
@@ -74,7 +75,7 @@ class MyMotor():
 
 	def speed_controll(self, event):
 		#estimate torque ?
-		tau = - self.o * self.a_volt - angv * self.a_angv
+		tau = - self.o * self.a_volt - self.angv * self.a_angv
 
 		#fix output value
 		o_feedback = (-tau - self.target_angv * self.a_angv) / self.a_volt
