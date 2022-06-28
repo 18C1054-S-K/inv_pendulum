@@ -11,27 +11,27 @@ if __name__ == "__main__":
 	if not rospy.is_shutdown():
 		print('f slow')
 		pub.publish(3.14159 / 2.0)
-	time.sleep(1.0)
+	time.sleep(3.0)
 
 	if not rospy.is_shutdown():
 		print('f fast')
 		pub.publish(3.14159)
-	time.sleep(1.0)
+	time.sleep(3.0)
 
 	if not rospy.is_shutdown():
 		print('f slow')
 		pub.publish(3.14159 / 2.0)
-	time.sleep(1.0)
+	time.sleep(3.0)
 
 	if not rospy.is_shutdown():
 		print('stop')
 		pub.publish(0.0)
-	time.sleep(1.0)
+	time.sleep(3.0)
 	
 	if not rospy.is_shutdown():
 		print('b slow')
 		pub.publish(-3.14159 / 2.0)
-	time.sleep(1.0)
+	time.sleep(3.0)
 	
 	if not rospy.is_shutdown():
 		print('stop')
