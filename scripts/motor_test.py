@@ -79,7 +79,7 @@ class MyMotor():
 
 		#fix output value
 		o_feedback = (-tau - self.target_angv * self.a_angv) / self.a_volt
-		o_pid = self.k_p * self.angv_err_p + self.err_i * self.angv_err_i + self.err_d * self.angv_err_d
+		o_pid = self.k_p * self.angv_err_p + self.k_i * self.angv_err_i + self.k_d * self.angv_err_d
 		self.o = (o_feedback + o_pid) / 2.0
 
 		#output
