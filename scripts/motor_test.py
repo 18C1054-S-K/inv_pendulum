@@ -13,8 +13,15 @@ class MyMotor():
 	STEP_2_RAD = 3.14159 / 40.0
 	
 	a_volt = 9.0
-#	a_angv = 0.09 #?
+#	a_angv = -0.09 #?
 	a_angv = rospy.get_param('/motor_test/a_angv')
+
+	k_p = rospy.get_param('/motor_test/k_p')
+	k_d = rospy.get_param('/motor_test/k_d')
+	k_i = rospy.get_param('/motor_test/k_i')
+	angv_err_p = 0.0
+	angv_err_d = 0.0
+	angv_err_i = 0.0
 	
 	l = 4 #length of latest_angs
 	latest_delta_angs = [0.0] * 4 #0:newest ang , 1:1 loop old ...
@@ -45,9 +52,7 @@ class MyMotor():
 		if delta_step >= 41:
 			delta_step -= 81
 		self.latest_delta_angs[0] = float(delta_step) * self.STEP_2_RAD
-		
 
-	def speed_controll(self, event):
 		#calc angular velocity
 		angv = 0.0
 		p = 1.0
@@ -57,14 +62,24 @@ class MyMotor():
 			d += self.latest_delta_angs[i]
 			angv += p * d / (float(i + 1) * self.DELTA_T_SAMPLING)
 		angv /= self.s
+
+		#calc err
+		angv_err_p_before = self.angv_err_p
+		self.angv_err_p = angv - self.target_angv
+		self.angv_err_d = (self.angv_err_p - angv_err_p_before) / self.DELTA_T_SAMPLING
+		self.angv_err_i += (self.angv_err_p + angv_err_p_before) * self.DELTA_T_SAMPLING / 2.0
 		
-		self.angular_velocity = angv
+		self.angular_velocity = self.angv
 		
+
+	def speed_controll(self, event):
 		#estimate torque ?
 		tau = - self.o * self.a_volt - angv * self.a_angv
 
 		#fix output value
-		self.o = (-tau - self.target_angv * self.a_angv) / self.a_volt
+		o_feedback = (-tau - self.target_angv * self.a_angv) / self.a_volt
+		o_pid = self.k_p * self.angv_err_p + self.err_i * self.angv_err_i + self.err_d * self.angv_err_d
+		self.o = (o_feedback + o_pid) / 2.0
 
 		#output
 		if self.o >= 1.0:

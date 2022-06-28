@@ -1,9 +1,12 @@
 <launch>
 	<arg name="forward_gpio" default="23"/>
 	<arg name="backward_gpio" default="24"/>
-	<arg name="encoder_a_gpio" default="5"/>
-	<arg name="encoder_b_gpio" default="6"/>
-	<arg name="a_angv" default="0.09"/>
+	<arg name="encoder_a_gpio" default="6"/>
+	<arg name="encoder_b_gpio" default="5"/>
+	<arg name="a_angv" default="-0.09"/>
+	<arg name="k_p" default="-1.0"/>
+	<arg name="k_i" default="-1.0"/>
+	<arg name="k_d" default="-1.0"/>
 	
 	<node name="test" pkg="inv_pendulum" type="test.py" output="screen"/>
 
@@ -13,5 +16,8 @@
 		<param name="encoder_a_gpio" type="int" value="$(arg encoder_a_gpio)"/>
 		<param name="encoder_b_gpio" type="int" value="$(arg encoder_b_gpio)"/>
 		<param name="a_angv" type="double" value="$(arg a_angv)"/>
+		<param name="k_p" type="double" value="$(arg k_p)"/>
+		<param name="k_i" type="double" value="$(arg k_i)"/>
+		<param name="k_d" type="double" value="$(arg k_d)"/>
 	</node>
 </launch>
