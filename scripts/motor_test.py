@@ -107,7 +107,8 @@ class MyMotor():
 		print('    difference   :', self.target_angv - self.angular_velocity)
 		self.target_angv = msg.data
 		self.o = - self.target_angv * self.a_angv / self.a_volt
-		self.angv_err_i = 0.0
+#		self.angv_err_i = 0.0
+		self.o_err_i = 0.0
 
 		if self.o >= 1.0:
 			self.o = 1.0
