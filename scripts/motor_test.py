@@ -17,6 +17,8 @@ class MyMotor():
 #	a_angv = -0.09 #?
 	a_angv = rospy.get_param('/motor_test/a_angv')
 
+	k_feedback = rospy.get_param('/motor_test/k_feedback')
+
 	k_p = rospy.get_param('/motor_test/k_p')
 	k_d = rospy.get_param('/motor_test/k_d')
 	k_i = rospy.get_param('/motor_test/k_i')
@@ -82,13 +84,13 @@ class MyMotor():
 
 		#fix output value
 		o_feedback = (-tau - self.target_angv * self.a_angv) / self.a_volt
-		o_pid = self.k_p * self.angv_err_p + self.k_i * self.angv_err_i + self.k_d * self.angv_err_d
+		o_pid = self.o + self.k_p * self.angv_err_p + self.k_i * self.angv_err_i + self.k_d * self.angv_err_d
 #		o_err_p_before = self.o_err_p
 #		self.o_err_p = target_o - self.o
 #		self.o_err_i += (self.o_err_p + o_err_p_before) * self.DELTA_T_CONTROLL / 2.0
 #		self.o_err_d = (self.o_err_p - o_err_p_before) / self.DELTA_T_CONTROLL
 #		self.o += self.k_p * self.o_err_p + self.k_i * self.o_err_i + self.k_d * self.o_err_d
-		self.o = (o_feedback + o_pid) / 2.0
+		self.o = (self.k_feedback * o_feedback + o_pid) / (1.0 + self.k_feedback)
 
 		#output
 		if self.o >= 1.0:

@@ -7,6 +7,7 @@
 	<arg name="k_p" default="-0.0019"/>
 	<arg name="k_i" default="-0.1"/>
 	<arg name="k_d" default="-0.0012"/>
+	<arg name="k_feedback" default="1.0"/>
 	
 	<node name="test" pkg="inv_pendulum" type="test.py" output="screen"/>
 
@@ -19,5 +20,6 @@
 		<param name="k_p" type="double" value="$(arg k_p)"/>
 		<param name="k_i" type="double" value="$(arg k_i)"/>
 		<param name="k_d" type="double" value="$(arg k_d)"/>
+		<param name="k_feedback" type="double" value="$(arg k_feedback)"/>
 	</node>
 </launch>
