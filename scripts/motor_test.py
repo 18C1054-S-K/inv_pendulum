@@ -81,13 +81,14 @@ class MyMotor():
 		tau = - self.o * self.a_volt - self.angv * self.a_angv
 
 		#fix output value
-#		target_o = (-tau - self.target_angv * self.a_angv) / self.a_volt
+		o_feedback = (-tau - self.target_angv * self.a_angv) / self.a_volt
+		o_pid = self.k_p * self.angv_err_p + self.k_i * self.angv_err_i + self.k_d * self.angv_err_d
 #		o_err_p_before = self.o_err_p
 #		self.o_err_p = target_o - self.o
 #		self.o_err_i += (self.o_err_p + o_err_p_before) * self.DELTA_T_CONTROLL / 2.0
 #		self.o_err_d = (self.o_err_p - o_err_p_before) / self.DELTA_T_CONTROLL
 #		self.o += self.k_p * self.o_err_p + self.k_i * self.o_err_i + self.k_d * self.o_err_d
-		self.o += self.k_p * self.angv_err_p + self.k_i * self.angv_err_i + self.k_d * self.angv_err_d
+		self.o = (o_feedback + o_pid) / 2.0
 
 		#output
 		if self.o >= 1.0:
@@ -104,10 +105,11 @@ class MyMotor():
 
 	def update_target(self, msg):
 		print('    before target:', self.target_angv)
-		print('    now angv     :', self.angular_velocity)
-		print('    difference   :', self.target_angv - self.angular_velocity)
+		print('    now angv     :', self.angv)
+		print('    difference   :', self.target_angv - self.angv)
 		self.target_angv = msg.data
-		self.o = - self.target_angv * self.a_angv / self.a_volt
+		tau = - self.o * self.a_volt - self.angv * self.a_angv
+		self.o = (-tau - self.target_angv * self.a_angv) / self.a_volt
 		self.angv_err_i = 0.0
 #		self.o_err_i = 0.0
 

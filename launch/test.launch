@@ -4,9 +4,9 @@
 	<arg name="encoder_a_gpio" default="6"/>
 	<arg name="encoder_b_gpio" default="5"/>
 	<arg name="a_angv" default="-0.09"/>
-	<arg name="k_p" default="0.8"/>
+	<arg name="k_p" default="-0.0019"/>
 	<arg name="k_i" default="-0.1"/>
-	<arg name="k_d" default="1.0"/>
+	<arg name="k_d" default="-0.0012"/>
 	
 	<node name="test" pkg="inv_pendulum" type="test.py" output="screen"/>
 
