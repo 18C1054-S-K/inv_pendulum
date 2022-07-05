@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-i#mport spidev
+#import spidev
 import gpiozero
 import rospy
 from std_msgs.msg import Float32MultiArray, Bool
