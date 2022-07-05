@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import rospy
-from std_msgs import Float32MultiArray
+from std_msgs.msg import Float32MultiArray
 
 
 class CheckNode:
