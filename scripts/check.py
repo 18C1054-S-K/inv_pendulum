@@ -39,8 +39,8 @@ class CheckNode:
 		print('car pos  : ', self.car_pos)
 		print('car vel  : ', self.car_vel)
 		print('')
-		print('    motorL_angv : 'self.motorL_angv)
-		print('    motorR_angv : 'self.motorR_angv)
+		print('    motorL_angv : ', self.motorL_angv)
+		print('    motorR_angv : ', self.motorR_angv)
 
 
 if __name__=="__main__":
