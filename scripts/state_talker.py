@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import spidev
 import gpiozero
 import rospy
 from std_msgs.msg import Float32MultiArray, Bool
@@ -20,6 +21,9 @@ def check_fail(ang):
 
 
 def main():
+	spi = spidev.SpiDev()
+	spi.open(0, 0)
+	spi.max_speed_hz=10000
 	pendulum_encoder = gpiozero.MCP3208(channel=0)
 	encoder_a = rospy.get_param('/state_talker/motorL_encoder_a')
 	encoder_b = rospy.get_param('/state_talker/motorL_encoder_b')
