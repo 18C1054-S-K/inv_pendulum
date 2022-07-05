@@ -84,9 +84,9 @@ def main():
 				p = 1.0
 				for i in range(l):
 					p *= 0.5
-					d_p += pendulum_delta_angs[i]
-					d_R += motorR_delta_angs[i]
-					d_L += motorL_delta_angs[i]
+					d_p += pendulum_latest_delta_angs[i]
+					d_R += motorR_latest_delta_angs[i]
+					d_L += motorL_latest_delta_angs[i]
 					pendulum_angv += p * d_p / (float(i + 1) * delta_t)
 					motorL_angv += p * d_L / (float(i + 1) * delta_t)
 					motorR_angv += p * d_R / (float(i + 1) * delta_t)
