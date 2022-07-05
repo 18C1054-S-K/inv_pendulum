@@ -1,0 +1,31 @@
+<launch>
+	<arg name="target_tire_angv" default="0.0"/>
+
+	<arg name="motorL_encoder_a" default="6"/>
+	<arg name="motorL_encoder_b" default="5"/>
+	<arg name="motorR_encoder_a" default="13"/>
+	<arg name="motorR_encoder_b" default="26"/>
+
+	<arg name="motorL_for" default="6"/>
+	<arg name="motorL_back" default="6"/>
+	<arg name="motorR_for" default="6"/>
+	<arg name="motorR_back" default="6"/>
+
+	<node name="check" pkg="inv_pendulum" type="check.py" output="screen">
+		<param name="target_tire_angv" type="double" value="$(arg target_tire_angv)"/>
+	</node>
+
+	<node name="state_talker" pkg="inv_pendulum" type="state_talker.py">
+		<param name="motorL_encoder_a" type="int" value="$(arg motorL_encoder_a)"/>
+		<param name="motorL_encoder_b" type="int" value="$(arg motorL_encoder_b)"/>
+		<param name="motorR_encoder_a" type="int" value="$(arg motorR_encoder_a)"/>
+		<param name="motorR_encoder_b" type="int" value="$(arg motorR_encoder_b)"/>
+	</node>
+
+	<node name="tire_rotater" pkg="inv_pendulum" type="tire_rotater.py">
+		<param name="motorL_for" type="int" value="$(arg motorL_for)"/>
+		<param name="motorL_back" type="int" value="$(arg motorL_back)"/>
+		<param name="motorR_for" type="int" value="$(arg motorR_for)"/>
+		<param name="motorR_back" type="int" value="$(arg motorR_back)"/>
+	</node>
+</launch>

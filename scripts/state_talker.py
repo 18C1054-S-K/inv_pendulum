@@ -46,10 +46,10 @@ def main():
 		#state=[car's pos  ,  car's vel  ,  pendulum's ang  ,  pendulum's angv]
 		pub_state = rospy.Publisher('state', Float32MultiArray, queue_size=10)
 		
-		pub_motor = rospy.Publisher('motor', Float32MultiArray, queue_size=10)
+		pub_motor = rospy.Publisher('tire_angv', Float32MultiArray, queue_size=10)
 		pub_fail = rospy.Publisher('failed', Bool, queue_size=10)
-		r = rospy.Rate(50)
-		delta_t = 1.0 / 50.0
+		r = rospy.Rate(100)
+		delta_t = 1.0 / 100.0
 
 		while not rospy.is_shutdown():
 			pendulum_ang = pendulum_encoder.value * ENCODER_VALUE_2_RAD - 3.14159

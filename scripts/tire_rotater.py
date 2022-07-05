@@ -6,9 +6,10 @@ from std_msgs.msg import Float32, Bool
 
 #rad
 class MyMotor():
-	DELTA_T = 0.003
+	is_left = True
+	
+	DELTA_T = 0.01
 	target_angv = 0.0
-	STEP_2_RAD = 3.14159 / 100.0
 	angv = 0.0
 	
 	err_angv = 0.0
@@ -19,32 +20,33 @@ class MyMotor():
 	k_d = 1.0
 	k_i = 1.0
 
-	l = 4 #length of latest_angs
-	latest_angs = [0.0] #0:newest ang , 1:1 loop old ...
-	s = 1.0
 
-	def __init__(self, forward_gpiono, backward_gpiono, encoder_a_gpiono, encoder_b_gpiono):
-		self.motor = gpiozero.Motor(forward_gpiono, backward_gpiono)
-		self.encoder = gpiozero.RotaryEncoder(a=encoder_a_gpiono, b=encoder_b_gpiono, max_steps=100)
+	def __init__(self, is_Left):
+		if is_Left == True:
+			self.is_left = True
+		else:
+			self.is_left = False
+		f = 3
+		b = 4
+		if self.is_left:
+			f = rospy.get_param('/tire_rotater/motorL_for')
+			b = rospy.get_param('/tire_rotater/motorL_back')
+		else:
+			f = rospy.get_param('/tire_rotater/motorR_for')
+			b = rospy.get_param('/tire_rotater/motorR_back')
+		self.motor = gpiozero.Motor(forward=f, backward=b)
+		self.sub_tire_angv = rospy.Subscriber('tire_angv', Float32MultiArray, self.update_tire_angv)
 		self.timer = rospy.Timer(rospy.Duration(self.DELTA_T), self.timer_func)
 
-		self.latest_angs = [0.0] * self.l
-		self.s = 1.0 - (0.5 ** self.l)
+
+	def update_tire_angv(self, msg):
+		if self.is_left:
+			self.angv = msg.data[0]
+		else:
+			self.angv = msg.data[1]
 
 
 	def timer_func(self, event):
-		#calc angv
-		for i in range(1, self.l):
-			latest_angs[self.l - i] = self.latest_angs[self.l - i - 1]
-		self.latest_angs[0] = self.encoder.steps * self.STEP_2_RAD
-
-		self.angv = 0.0
-		p = 1.0
-		for i in range(1, self.l):
-			p *= 0.5
-			self.angv += p * (self.latest_angs[0] - self.latest_angs[i]) / (float(i) * self.DELTA_T)
-		self.angv /= self.s
-		
 		#calc error and its d&i
 		e_av_b = self.err_angv
 		self.err_angv = self.target_angv - self.angv
@@ -54,6 +56,8 @@ class MyMotor():
 
 		#output
 		o = self.err_angv * self.k_p + self.err_angv_d * self.k_d + self.err_angv_i * self.k_i
+		if not self.is_left:
+			o *= -1.0
 		if o > 1.0:
 			self.motor.forward(1.0)
 		elif o >= 0.0:
@@ -65,58 +69,48 @@ class MyMotor():
 
 
 	def rotate(self, rad_per_sec):
-		self.target_rps = rad_per_sec
+		self.target_angv = rad_per_sec
 		self.err_angv = 0.0
-		self.err_ang = 0.0
+		self.err_angv_i = 0.0
+		
+		
+	def stop(self):
+		self.motor.stop()
 
 
-class TireRotaterNode():
+class TireRotaterNode:
 	POS_V_2_RAD_PER_SEC = 0.0
 	MAX_RAD_PER_SEC = 5.0
+	TIRE_RADIUS = 0.03
 
 	rad_per_sec = 0.0
 	
 	controll_failed = False
 
 	def __init__(self):
-		self.motor = gpiozero.Motor(17, 18)
-		self.sub_pos_v('pos_v', Float32, self.on_update_pos_v)
+		self.motorL = MyMotor(is_Left=True)
+		self.motorR = MyMotor(is_Left=False)
+		self.sub_target('target_car_vel', Float32, self.on_update_target)
 		self.sub_fail('failed', Bool self.on_controll_failed)
 
 
-	def on_update_pos_v(self, msg):
+	def on_update_target(self, msg):
 		if not controll_failed:
-			self.rad_per_sec = msg.data * POS_V_2_RAD_PER_SE
-			o = self.rad_per_sec / self.MAX_RAD_PER_SEC
-			if o >= 1.0:
-				self.motor.forward(1.0)
-			elif o >=0.0:
-				self.motor.forward(o)
-			if o < -1.0:
-				self.motor.backward(1.0)
-			elif o < 0.0:
-				self.motor.backward(-o)
+			self.motorL.rotate(target_car_vel / self.TIRE_RADIUS)
+			self.motorR.rotate(target_car_vel / self.TIRE_RADIUS)
 
 
 	def on_controll_failed(self, msg):
 		if msg.data == True:
 			self.controll_failed = True
-			delta_t = 1.0 / 30.0
-			r = rospy.Rate(30)
-			while self.rad_per_sec > 0.001 or self.rad_per_sec < -0.001:
-				self.rad_per_sec = - self.rad_per_sec * dalta_t
-				if self.rad_per_sec < 0.0:
-					self.motor.backward(- self.rad_per_sec / self.MAX_RAD_PER_SEC)
-				else:
-					self.motor.forward(self.rad_per_sec / self.MAX_RAD_PER_SEC)
-				r.sleep()
-			self.motor.stop()
+			self.motorL.stop()
+			self.motorR.stop()
 
 
 def main():
 	try:
 		rospy.init_node('tire_rotater', anonymous=True)
-		node = TireControllerNode()
+		node = TireRotaterNode()
 		rospy.spin()
 	except rospy.ROSInterruptException: pass
 
