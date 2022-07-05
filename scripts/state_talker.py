@@ -58,8 +58,8 @@ def main():
 					pendulum_latest_delta_angs[i] = pendulum_latest_delta_angs[i - 1]
 					motorR_latest_delta_angs[i] = motorR_latest_delta_angs[i - 1]
 					motorL_latest_delta_angs[i] = motorL_latest_delta_angs[i - 1]
-				motorL_ang = float(motorL_encoder.steps) * MOtOR_ENCODER_STEP_2_RAD
-				motorR_ang = float(motorR_encoder.steps) * MOtOR_ENCODER_STEP_2_RAD
+				motorL_ang = float(motorL_encoder.steps) * MOTOR_ENCODER_STEP_2_RAD
+				motorR_ang = float(motorR_encoder.steps) * MOTOR_ENCODER_STEP_2_RAD
 
 				pendulum_latest_delta_angs[0] = pendulum_ang - pendulum_ang_before
 				motorL_latest_delta_angs[0] = motorL_ang - motorL_ang_before

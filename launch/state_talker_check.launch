@@ -1,8 +1,8 @@
 <launch>
 	<arg name="motorL_encoder_a" default="5"/>
-	<arg name="motorL_encoder_b" default="5"/>
-	<arg name="motorR_encoder_a" default="5"/>
-	<arg name="motorR_encoder_b" default="5"/>
+	<arg name="motorL_encoder_b" default="6"/>
+	<arg name="motorR_encoder_a" default="26"/>
+	<arg name="motorR_encoder_b" default="13"/>
 
 	<node name="check" pkg="inv_pendulum" type="check.py" output="screen"/>
 	<node name="state_talker" pkg="inv_pendulum" type="state_talker.py">
