@@ -1,0 +1,14 @@
+<launch>
+	<arg name="motorL_encoder_a" default="5"/>
+	<arg name="motorL_encoder_b" default="5"/>
+	<arg name="motorR_encoder_a" default="5"/>
+	<arg name="motorR_encoder_b" default="5"/>
+
+	<node name="check" pkg="inv_pendulum" type="check.py" output="screen"/>
+	<node name="state_talker" pkg="inv_pendulum" type="state_talker.py">
+		<param name="motorL_encoder_a" type="int" value="$(arg motorL_encoder_a)"/>
+		<param name="motorL_encoder_b" type="int" value="$(arg motorL_encoder_b)"/>
+		<param name="motorR_encoder_a" type="int" value="$(arg motorR_encoder_a)"/>
+		<param name="motorR_encoder_b" type="int" value="$(arg motorR_encoder_b)"/>
+	</node>
+</launch>
