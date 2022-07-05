@@ -44,5 +44,8 @@ class CheckNode:
 
 
 if __name__=="__main__":
-	node = CheckNode()
+	try:
+		node = CheckNode()
+		rospy.spin()
+	except rospy.ROSInterruptException: pass
 
