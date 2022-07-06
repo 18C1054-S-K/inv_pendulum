@@ -73,7 +73,7 @@ class MotorRotaterCheckNode:
 if __name__=="__main__":
 	try:
 		rospy.init_node('check', anonymous=True)
-		node = MotorRotaterCheckNode()
+		node = StateTalkerCheckNode()
 		rospy.spin()
 	except rospy.ROSInterruptException: pass
 
