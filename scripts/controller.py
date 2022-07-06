@@ -27,9 +27,6 @@ class ControllerNode():
 	k_pos = 0.0
 	k_posv = 0.0
 
-	f_2 = 0.0
-	f_3 = 0.0
-	f_4 = 0.0
 
 	def __init__(self):
 		self.sub_ang = rospy.Subscriber('state', Float32MultiArray, self.on_update_state)
@@ -40,10 +37,10 @@ class ControllerNode():
 		self.eigenvals[2] = rospy.get_param("/controller/eigenval2")
 		self.eigenvals[3] = rospy.get_param("/controller/eigenval3")
 		if self.eigenvals[0] < 0.0 and self.eigenvals[1] < 0.0 and self.eigenvals[2] < 0.0 and self.eigenvals[3] < 0.0:
-			self.calc_k_and_f()
+			self.calc_k()
 
 		
-	def calc_k_and_f(self):
+	def calc_k(self):
 		A = np.zeros(4,4)
 		b = np.zeros(4,1)
 		for i in range(4):
@@ -59,13 +56,6 @@ class ControllerNode():
 			self.k_posv = ans[1][0]
 			self.k_ang = ans[2][0]
 			self.k_angv = ans[3][0]
-
-			temp = (self.m + self.M) * (self.I / (self.r ** 2) - m) + self.m ** 2
-			temp = 1.0 / temp
-			self.f_2 = self.k_pos_v * (self.I / (self.r ** 2) - m) * temp
-			self.f_3 = (self.m ** 2) * GRAVITY / self.r + (self.I / (self.r ** 2) - m) * self.k_ang
-			self.f_3 *= temp
-			self.f_4 = temp * (self.I / (self.r ** 2) - m) * self.k_ang_v
 		except np.linalg.LinAlgError: pass
 
 
@@ -88,7 +78,7 @@ class ControllerNode():
 			pos_a *= math.sin(self.pendulum_angv)
 			pos_a += f
 			pos_a /= temp
-			new_car_vel = car_vel + pos_a * self.DELTA_TIME
+			new_car_vel = self.car_vel + pos_a * self.DELTA_TIME
 			self.pub_vel.publish(new_car_vel)
 
 
@@ -97,7 +87,7 @@ def main():
 		rospy.init_node('controller', anonymous=True)
 		node = ControllerNode()
 		rospy.spin()
-	except rospy.ROSInterruptExceprion: pass
+	except rospy.ROSInterruptException: pass
 
 
 if __name__ == '__main__':
