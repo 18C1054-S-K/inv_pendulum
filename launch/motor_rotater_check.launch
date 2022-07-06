@@ -6,10 +6,10 @@
 	<arg name="motorR_encoder_a" default="13"/>
 	<arg name="motorR_encoder_b" default="26"/>
 
-	<arg name="motorL_for" default="23"/>
-	<arg name="motorL_back" default="24"/>
-	<arg name="motorR_for" default="22"/>
-	<arg name="motorR_back" default="27"/>
+	<arg name="motorL_for" default="24"/>
+	<arg name="motorL_back" default="23"/>
+	<arg name="motorR_for" default="27"/>
+	<arg name="motorR_back" default="22"/>
 
 	<arg name="k_p" default="-0.0019"/>
 	<arg name="k_i" default="-0.0012"/>
