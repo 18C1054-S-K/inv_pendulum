@@ -2,7 +2,7 @@
 
 import gpiozero
 import rospy
-from std_msgs.msg import Float32, Bool
+from std_msgs.msg import Float32, Float32MultiArray, Bool
 
 #rad
 class MyMotor():
