@@ -96,8 +96,8 @@ class TireRotaterNode:
 
 	def on_update_target(self, msg):
 		if not self.controll_failed:
-			self.motorL.rotate(target_car_vel / self.TIRE_RADIUS)
-			self.motorR.rotate(target_car_vel / self.TIRE_RADIUS)
+			self.motorL.rotate(msg.data / self.TIRE_RADIUS)
+			self.motorR.rotate(msg.data / self.TIRE_RADIUS)
 
 
 	def on_controll_failed(self, msg):
