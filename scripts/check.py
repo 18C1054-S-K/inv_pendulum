@@ -22,10 +22,10 @@ class StateTalkerCheckNode:
 
 
 	def on_update_state(self, msg):
-		self.pendulum_ang = msg.data[0]
-		self.pendulum_angv = msg.data[1]
-		self.car_pos = msg.data[2]
-		self.car_vel = msg.data[3]
+		self.car_pos = msg.data[0]
+		self.car_vel = msg.data[1]
+		self.pendulum_ang = msg.data[2]
+		self.pendulum_angv = msg.data[3]
 
 
 	def on_update_motor(self, msg): #debug

@@ -10,9 +10,9 @@ GRAVITY = 9.81
 class ControllerNode():
 	DELTA_TIME = 0.02
 	
-	m = 0.74
-	M = 0.075
-	I = 0.1
+	m = 0.075
+	M = 0.74
+	I = 0.004
 	r = 0.12
 
 	pendulum_ang = 0.0
@@ -60,19 +60,19 @@ class ControllerNode():
 
 
 	def on_update_state(self, msg):
-		self.pendulum_ang = msg.data[0]
-		self.pendulum_angv = msg.data[1]
-		self.car_pos = msg.data[2]
-		self.car_vel = msg.data[3]
+		self.car_pos = msg.data[0]
+		self.car_vel = msg.data[1]
+		self.pendulum_ang = msg.data[2]
+		self.pendulum_angv = msg.data[3]
 
 
 	def update_pos_v(self, event):
 		if not rospy.is_shutdown():
-			f = self.k_ang * self.pendulum_ang
-			f += self.k_angv * self.pendulum_angv
-			f += self.k_pos * self.car_pos
+			f = self.k_pos * self.car_pos
 			f += self.k_posv * self.car_vel
-			
+			f += self.k_ang * self.r * self.pendulum_ang
+			f += self.k_angv * self.r * self.pendulum_angv
+
 			temp = (self.m * self.m * self.r * self.r) / (self.I - self.m * self.r * self.r)
 			pos_a = temp * GRAVITY + self.m * self.r * (self.pendulum_angv ** 2)
 			pos_a *= math.sin(self.pendulum_angv)
