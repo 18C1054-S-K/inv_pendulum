@@ -1,14 +1,45 @@
 <launch>
-	<arg name="eigenval0_arg" default="0.0"/>
-	<arg name="eigenval1_arg" default="0.0"/>
-	<arg name="eigenval2_arg" default="0.0"/>
+	<arg name="eigenval0" default="-2.0"/>
+	<arg name="eigenval1" default="-1.8"/>
+	<arg name="eigenval2" default="-1.9"/>
+	<arg name="eigenval3" default="-2.1"/>
 
-	<node name="controller" pkg="inv_pendulum" type="controller.py" output="screen">
-		<param name="eigenval0" type="double" value="$(arg eigenval0_arg)"/>
-		<param name="eigenval1" type="double" value="$(arg eigenval1_arg)"/>
-		<param name="eigenval2" type="double" value="$(arg eigenval2_arg)"/>
+	<arg name="motorL_encoder_a" default="6"/>
+	<arg name="motorL_encoder_b" default="5"/>
+	<arg name="motorR_encoder_a" default="13"/>
+	<arg name="motorR_encoder_b" default="26"/>
+
+	<arg name="motorL_for" default="24"/>
+	<arg name="motorL_back" default="23"/>
+	<arg name="motorR_for" default="27"/>
+	<arg name="motorR_back" default="22"/>
+
+	<arg name="k_p" default="-0.0019"/>
+	<arg name="k_i" default="-0.0012"/>
+	<arg name="k_d" default="0.0"/>
+
+	<node name="state_talker" pkg="inv_pendulum" type="state_talker.py">
+		<param name="motorL_encoder_a" type="int" value="$(arg motorL_encoder_a)"/>
+		<param name="motorL_encoder_b" type="int" value="$(arg motorL_encoder_b)"/>
+		<param name="motorR_encoder_a" type="int" value="$(arg motorR_encoder_a)"/>
+		<param name="motorR_encoder_b" type="int" value="$(arg motorR_encoder_b)"/>
 	</node>
 
-	<node name="ang_talker" pkg="inv_pendulum" type="controller.py"/>
-	<node name="tire_rotater" pkg="inv_pendulum" type="tire_rotater.py"/>
+	<node name="tire_rotater" pkg="inv_pendulum" type="tire_rotater.py">
+		<param name="k_p" type="double" value="$(arg k_p)"/>
+		<param name="k_i" type="double" value="$(arg k_i)"/>
+		<param name="k_d" type="double" value="$(arg k_d)"/>
+
+		<param name="motorL_for" type="int" value="$(arg motorL_for)"/>
+		<param name="motorL_back" type="int" value="$(arg motorL_back)"/>
+		<param name="motorR_for" type="int" value="$(arg motorR_for)"/>
+		<param name="motorR_back" type="int" value="$(arg motorR_back)"/>
+	</node>
+
+	<node name="controller" pkg="inv_pendulum" type="controller.py" output="screen">
+		<param name="eigenval0" type="double" value="$(arg eigenval0)"/>
+		<param name="eigenval1" type="double" value="$(arg eigenval1)"/>
+		<param name="eigenval2" type="double" value="$(arg eigenval2)"/>
+		<param name="eigenval3" type="double" value="$(arg eigenval3)"/>
+	</node>
 </launch>
