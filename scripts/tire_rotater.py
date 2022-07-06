@@ -84,7 +84,7 @@ class MyMotor():
 class TireRotaterNode:
 	POS_V_2_RAD_PER_SEC = 0.0
 	MAX_RAD_PER_SEC = 5.0
-	TIRE_RADIUS = 0.03
+	TIRE_RADIUS = 0.025
 
 	rad_per_sec = 0.0
 	

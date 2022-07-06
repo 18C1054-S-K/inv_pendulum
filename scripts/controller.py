@@ -10,8 +10,8 @@ GRAVITY = 9.81
 class ControllerNode():
 	DELTA_TIME = 0.02
 	
-	m = 0.1
-	M = 0.8
+	m = 0.74
+	M = 0.075
 	I = 0.1
 	r = 0.12
 
