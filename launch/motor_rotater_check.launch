@@ -6,10 +6,10 @@
 	<arg name="motorR_encoder_a" default="13"/>
 	<arg name="motorR_encoder_b" default="26"/>
 
-	<arg name="motorL_for" default="6"/>
-	<arg name="motorL_back" default="6"/>
-	<arg name="motorR_for" default="6"/>
-	<arg name="motorR_back" default="6"/>
+	<arg name="motorL_for" default="23"/>
+	<arg name="motorL_back" default="24"/>
+	<arg name="motorR_for" default="22"/>
+	<arg name="motorR_back" default="27"/>
 
 	<node name="check" pkg="inv_pendulum" type="check.py" output="screen">
 		<param name="target_tire_angv" type="double" value="$(arg target_tire_angv)"/>
