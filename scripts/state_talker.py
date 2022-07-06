@@ -32,13 +32,13 @@ def main():
 	encoder_b = rospy.get_param('/state_talker/motorR_encoder_b')
 	motorR_encoder = gpiozero.RotaryEncoder(a=encoder_a, b=encoder_b, max_steps=MOTOR_ENCODER_MAX_STEP, wrap=True)
 	
-	l = 5
+	l = 3
 	pendulum_ang_before = 0.0
-	pendulum_latest_delta_angs = [0.0] * 5
+	pendulum_latest_delta_angs = [0.0] * 3
 	motorR_ang_before = 0.0
-	motorR_latest_delta_angs = [0.0] * 5
+	motorR_latest_delta_angs = [0.0] * 3
 	motorL_ang_before = 0.0
-	motorL_latest_delta_angs = [0.0] * 5
+	motorL_latest_delta_angs = [0.0] * 3
 	s = 1.0 - (0.5 ** l)
 
 	try:
