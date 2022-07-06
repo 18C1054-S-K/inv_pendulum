@@ -41,8 +41,8 @@ class ControllerNode():
 
 		
 	def calc_k(self):
-		A = np.zeros(4,4)
-		b = np.zeros(4,1)
+		A = np.zeros((4,4))
+		b = np.zeros((4,1))
 		for i in range(4):
 			A[i][0] = self.m * GRAVITY / self.r
 			A[i][1] = (self.I / (self.r ** 2) - self.m) * (self.eigenvals[i] ** 3) + self.m * GRAVITY * self.eigenvals[i] / self.r
