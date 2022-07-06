@@ -90,8 +90,8 @@ class TireRotaterNode:
 	def __init__(self):
 		self.motorL = MyMotor(is_Left=True)
 		self.motorR = MyMotor(is_Left=False)
-		self.sub_target('target_car_vel', Float32, self.on_update_target)
-		self.sub_fail('failed', Bool, self.on_controll_failed)
+		self.sub_target = rospy.Subscriber('target_car_vel', Float32, self.on_update_target)
+		self.sub_fail = rospy.Subscriber('failed', Bool, self.on_controll_failed)
 
 
 	def on_update_target(self, msg):
