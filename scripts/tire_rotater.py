@@ -34,6 +34,9 @@ class MyMotor():
 		else:
 			f = rospy.get_param('/tire_rotater/motorR_for')
 			b = rospy.get_param('/tire_rotater/motorR_back')
+		self.k_p = rospy.get_param('/tire_rotater/k_p')
+		self.k_i = rospy.get_param('/tire_rotater/k_i')
+		self.k_d = rospy.get_param('/tire_rotater/k_d')
 		self.motor = gpiozero.Motor(forward=f, backward=b)
 		self.sub_tire_angv = rospy.Subscriber('tire_angv', Float32MultiArray, self.update_tire_angv)
 		self.timer = rospy.Timer(rospy.Duration(self.DELTA_T), self.timer_func)
