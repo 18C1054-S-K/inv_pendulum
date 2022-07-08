@@ -40,7 +40,7 @@ def main():
 	motorR_latest_delta_angs = [0.0] * 3
 	motorL_ang_before = 0.0
 	motorL_latest_delta_angs = [0.0] * 3
-	time_before = time.perf_counter
+	time_before = time.perf_counter()
 	latest_delta_times = [1.0/100.0] * 3
 	s = 1.0 - (0.5 ** l)
 
@@ -69,7 +69,7 @@ def main():
 					latest_delta_times[i] = latest_delta_times[i - 1]
 				motorL_ang = float(motorL_encoder.steps) * MOTOR_ENCODER_STEP_2_RAD
 				motorR_ang = float(motorR_encoder.steps) * MOTOR_ENCODER_STEP_2_RAD
-				time_now = time.perf_counter
+				time_now = time.perf_counter()
 
 				pendulum_latest_delta_angs[0] = pendulum_ang - pendulum_ang_before
 				motorL_latest_delta_angs[0] = motorL_ang - motorL_ang_before
