@@ -6,6 +6,8 @@
 
 	<arg name="volt" default="0.0"/>
 
+	<node name="check" pkg="inv_pendulum" type="check.py" output="screen"/>
+
 	<node name="state_talker" pkg="inv_pendulum" type="state_talker.py">
 		<param name="motorL_encoder_a" type="int" value="$(arg motorL_encoder_a)"/>
 		<param name="motorL_encoder_b" type="int" value="$(arg motorL_encoder_b)"/>
