@@ -11,6 +11,6 @@ if __name__ == "__main__":
 
 	v = rospy.get_param('/motor_check/volt')
 	o = v / 9.0
-	motorL.rotate(o)
-	motorR.rotate(o)
+	motorL.forward(o)
+	motorR.forward(o)
 
