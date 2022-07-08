@@ -106,7 +106,7 @@ def main():
 
 				car_vel = (motorL_angv + motorR_angv) * TIRE_RADIUS / 2.0
 
-				arr = [pendulum_ang, pendulum_angv, car_pos, car_vel]
+				arr = [car_pos, car_vel, pendulum_ang, pendulum_angv]
 				pub_state.publish(Float32MultiArray(data=arr))
 				
 				pub_motor.publish(Float32MultiArray(data=[motorL_angv, motorR_angv]))
