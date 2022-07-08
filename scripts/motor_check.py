@@ -15,4 +15,6 @@ if __name__ == "__main__":
 	motorL.forward(o)
 	motorR.forward(o)
 	print('output : ', o*100.0, '%')
+	while not rospy.is_shutdown():
+		time.sleep(1.0)
 
