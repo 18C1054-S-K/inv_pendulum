@@ -41,7 +41,7 @@ def main():
 	motorL_ang_before = 0.0
 	motorL_latest_delta_angs = [0.0] * 3
 	time_before = time.perf_counter()
-	latest_delta_times = [1.0/100.0] * 3
+	latest_delta_times = [1.0/80.0] * 3
 	s = 1.0 - (0.5 ** l)
 
 	try:
@@ -51,8 +51,8 @@ def main():
 		
 		pub_motor = rospy.Publisher('tire_angv', Float32MultiArray, queue_size=10)
 		pub_fail = rospy.Publisher('failed', Bool, queue_size=10)
-		r = rospy.Rate(100)
-		delta_t = 1.0 / 100.0
+		r = rospy.Rate(80)
+		delta_t = 1.0 / 80.0
 		
 
 		while not rospy.is_shutdown():
