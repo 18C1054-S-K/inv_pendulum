@@ -15,7 +15,7 @@
 		<param name="motorR_encoder_b" type="int" value="$(arg motorR_encoder_b)"/>
 	</node>
 
-	<node name="motor_check" pkg="inv_pendulum" type="motor_check.py">
+	<node name="motor_check" pkg="inv_pendulum" type="motor_check.py" output="screen">
 		<param name="volt" type="double" value="$(arg volt)"/>
 	</node>
 </launch>

@@ -13,4 +13,5 @@ if __name__ == "__main__":
 	o = v / 9.0
 	motorL.forward(o)
 	motorR.forward(o)
+	print('output : ', o, '%')
 
