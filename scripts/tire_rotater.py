@@ -39,7 +39,7 @@ class MyMotor():
 		self.k_d = rospy.get_param('/tire_rotater/k_d')
 		self.motor = gpiozero.Motor(forward=f, backward=b)
 		self.sub_tire_angv = rospy.Subscriber('tire_angv', Float32MultiArray, self.update_tire_angv)
-		self.timer = rospy.Timer(rospy.Duration(self.DELTA_T), self.timer_func)
+#		self.timer = rospy.Timer(rospy.Duration(self.DELTA_T), self.timer_func)
 
 
 	def update_tire_angv(self, msg):
@@ -73,6 +73,23 @@ class MyMotor():
 
 	def rotate(self, rad_per_sec):
 		self.target_angv = rad_per_sec
+		o = 0.0
+		if rad_per_sec > 0.0:
+			o = 0.25 * rad_per_sec + 2.75
+		if rad_per_sec < 0.0:
+			o = 0.25 * rad_per_sec - 2.75
+
+		if not self.is_left:
+			o *= -1.0
+		if o > 1.0:
+			self.motor.forward(1.0)
+		elif o >= 0.0:
+			self.motor.forward(o)
+		elif o < -1.0:
+			self.motor.backward(1.0)
+		else:
+			self.motor.backward(-o)
+		
 		self.err_angv = 0.0
 		self.err_angv_i = 0.0
 		
