@@ -28,20 +28,20 @@ def main():
 	pendulum_encoder = gpiozero.MCP3208(channel=0)
 	encoder_a = rospy.get_param('/state_talker/motorL_encoder_a')
 	encoder_b = rospy.get_param('/state_talker/motorL_encoder_b')
-	motorL_encoder = gpiozero.RotaryEncoder(a=encoder_a, b=encoder_b, max_steps=MOTOR_ENCODER_MAX_STEP, wrap=True)
+	motorL_encoder = gpiozero.RotaryEncoder(a=encoder_a, b=encoder_b, max_steps=4000, wrap=True)
 	encoder_a = rospy.get_param('/state_talker/motorR_encoder_a')
 	encoder_b = rospy.get_param('/state_talker/motorR_encoder_b')
-	motorR_encoder = gpiozero.RotaryEncoder(a=encoder_a, b=encoder_b, max_steps=MOTOR_ENCODER_MAX_STEP, wrap=True)
+	motorR_encoder = gpiozero.RotaryEncoder(a=encoder_a, b=encoder_b, max_steps=4000, wrap=True)
 	
-	l = 3
+	l = 4
 	pendulum_ang_before = 0.0
-	pendulum_latest_delta_angs = [0.0] * 3
+	pendulum_latest_delta_angs = [0.0] * 4
 	motorR_ang_before = 0.0
-	motorR_latest_delta_angs = [0.0] * 3
+	motorR_latest_delta_angs = [0.0] * 4
 	motorL_ang_before = 0.0
-	motorL_latest_delta_angs = [0.0] * 3
+	motorL_latest_delta_angs = [0.0] * 4
 	time_before = time.perf_counter()
-	latest_delta_times = [1.0/80.0] * 3
+	latest_delta_times = [1.0/80.0] * 4
 	s = 1.0 - (0.5 ** l)
 
 	try:
@@ -73,15 +73,7 @@ def main():
 
 				pendulum_latest_delta_angs[0] = pendulum_ang - pendulum_ang_before
 				motorL_latest_delta_angs[0] = motorL_ang - motorL_ang_before
-				if motorL_latest_delta_angs[0] > 3.14159:
-					motorL_latest_delta_angs[0] -= 2.0 * 3.14159
-				if motorL_latest_delta_angs[0] < -3.14159:
-					motorL_latest_delta_angs[0] += 2.0 * 3.14159
 				motorR_latest_delta_angs[0] = motorR_ang - motorR_ang_before
-				if motorR_latest_delta_angs[0] > 3.14159:
-					motorR_latest_delta_angs[0] -= 2.0 * 3.14159
-				if motorR_latest_delta_angs[0] < -3.14159:
-					motorR_latest_delta_angs[0] += 2.0 * 3.14159
 				latest_delta_times[0] = time_now - time_before
 
 				car_pos = (motorL_ang + motorR_ang) * TIRE_RADIUS / 2.0
@@ -103,6 +95,9 @@ def main():
 					pendulum_angv += p * d_p / (float(i + 1) * d_t)
 					motorL_angv += p * d_L / (float(i + 1) * d_t)
 					motorR_angv += p * d_R / (float(i + 1) * d_t)
+				pendulum_angv /= s
+				motorL_angv /= s
+				motorR_angv /= s
 
 				car_vel = (motorL_angv + motorR_angv) * TIRE_RADIUS / 2.0
 
